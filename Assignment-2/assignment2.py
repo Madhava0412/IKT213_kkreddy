@@ -81,12 +81,18 @@ def hue_shifted(image, emptyPictureArray, hue):
     img = load_image(image)
     if img is None:
         return
+
     h, w, c = img.shape
+
     for i in range(h):
         for j in range(w):
             for k in range(c):
-                emptyPictureArray[i, j, k] = (int(img[i, j, k]) + hue) % 256
+                # Convert to int before adding to prevent overflow
+                new_val = int(img[i, j, k]) + hue
+                emptyPictureArray[i, j, k] = np.clip(new_val, 0, 255)
+
     save_image(emptyPictureArray, image, "hue_shifted")
+
 
 
 def smoothing(image):
